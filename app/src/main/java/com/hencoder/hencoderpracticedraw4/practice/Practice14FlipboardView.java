@@ -20,8 +20,8 @@ public class Practice14FlipboardView extends View {
     Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Bitmap bitmap;
     Camera camera = new Camera();
-    int degree=45;
-    ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 270);
+    int degree = 45;
+    ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 180);
 
     public Practice14FlipboardView(Context context) {
         super(context);
@@ -41,13 +41,13 @@ public class Practice14FlipboardView extends View {
         animator.setDuration(2500);
         animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-//        animator.start();
+        animator.start();
     }
 
     @Override
@@ -74,46 +74,26 @@ public class Practice14FlipboardView extends View {
         int y = centerY - bitmapHeight / 2;
         //绘制上半部分
         canvas.save();
-        canvas.translate(centerX,centerY);
+        canvas.translate(centerX, centerY);
         canvas.rotate(-45);
-        canvas.clipRect(-bitmapWidth/2, -bitmapHeight/2, bitmapWidth/2, 0);
-        canvas.drawBitmap(bitmap, -bitmapWidth/2,-bitmapHeight/2, paint);
+        canvas.clipRect(-bitmapWidth / 2, -bitmapHeight / 2, 0, bitmapHeight / 2);
+        canvas.drawBitmap(bitmap, -bitmapWidth / 2, -bitmapHeight / 2, paint);
         canvas.restore();
 
         canvas.save();
-        path.reset();
-        //绘制下半部分
-        if (degree <= 45) {
-            path.moveTo(x + (degree + 45) / 45f * bitmapWidth / 2, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y);
-            path.lineTo(x - (degree + 45) / 45f * bitmapWidth / 2, y);
-        } else if (degree <= 135) {
-            path.moveTo(x + bitmapWidth, y + bitmapHeight - (degree - 225) / 45f * bitmapHeight);
-            path.lineTo(x + bitmapWidth, y);
-            path.lineTo(x, y);
-            path.lineTo(x, y + (degree - 225) / 45f * bitmapHeight);
-        } else if (degree <= 225) {
-            path.moveTo(x, y + (degree - 45) / 90f * bitmapHeight);
-            path.lineTo(x, bitmapHeight);
-            path.lineTo(x + bitmapWidth, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y - (degree - 45) / 90f * bitmapHeight);
-        } else {
-            path.moveTo(x + centerX * (1 - degree / 45f), y);
-            path.lineTo(x, y);
-            path.lineTo(x, y + bitmapHeight);
-            path.lineTo(x + centerX * (1 - degree / 45f), y);
-        }
-        path.close();
-        canvas.clipPath(path);
-        camera.save();
-        camera.rotateY(45);
         canvas.translate(centerX, centerY);
+        canvas.rotate(-45);
+        canvas.clipRect(0, -bitmapHeight / 2, bitmapWidth / 2, bitmapHeight / 2);
+
+        camera.save();
+        camera.rotateX(45);
         camera.applyToCanvas(canvas);
-        canvas.translate(-centerX, -centerY);
+
         camera.restore();
+
+        canvas.drawBitmap(bitmap, -bitmapWidth / 2, -bitmapHeight / 2, paint);
         canvas.rotate(45);
-//        canvas.drawBitmap(bitmap, x, y, paint);
+        canvas.translate(-centerX, -centerY);
         canvas.restore();
     }
 }
