@@ -74,33 +74,10 @@ public class Practice14FlipboardView extends View {
         int y = centerY - bitmapHeight / 2;
         //绘制上半部分
         canvas.save();
-        Path path = new Path();
-        if (degree <= 45) {
-            path.moveTo(x + bitmapWidth/2 * (1 - degree / 45f), y);
-            path.lineTo(x, y);
-            path.lineTo(x, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth/2 * (1 - degree / 45f), y+bitmapHeight);
-        } else if (degree <= 135) {
-            path.moveTo(x, y + (degree - 45) / 90f * bitmapHeight);
-            path.lineTo(x, y+bitmapHeight);
-            path.lineTo(x + bitmapWidth, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y - (degree - 45) / 90f * bitmapHeight);
-        } else if (degree <= 225) {
-            path.moveTo(x + (degree - 135) / 90f * bitmapWidth, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y + bitmapHeight);
-            path.lineTo(x + bitmapWidth, y);
-            path.lineTo(x - (degree - 135) / 90f * bitmapWidth, y);
-        } else {
-            path.moveTo(x + bitmapWidth, y + bitmapHeight - (degree - 225) / 45f * bitmapHeight);
-            path.lineTo(x + bitmapWidth, y);
-            path.lineTo(x, y);
-            path.lineTo(x, y + (degree - 225) / 45f * bitmapHeight);
-        }
-
-
-        path.close();
-        canvas.clipPath(path);
-        canvas.drawBitmap(bitmap, x, y, paint);
+        canvas.translate(centerX,centerY);
+        canvas.rotate(-45);
+        canvas.clipRect(-bitmapWidth/2, -bitmapHeight/2, bitmapWidth/2, 0);
+        canvas.drawBitmap(bitmap, -bitmapWidth/2,-bitmapHeight/2, paint);
         canvas.restore();
 
         canvas.save();
@@ -135,7 +112,7 @@ public class Practice14FlipboardView extends View {
         camera.applyToCanvas(canvas);
         canvas.translate(-centerX, -centerY);
         camera.restore();
-
+        canvas.rotate(45);
 //        canvas.drawBitmap(bitmap, x, y, paint);
         canvas.restore();
     }
